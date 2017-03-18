@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "C:\\Users\\hello\\Desktop\\PKC\\NavigationDrawer\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-ldltr-v21\\values-ldltr-v21.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 112,
+                    "endOffset": 163
+                },
+                "from": {
+                    "file": "C:\\Users\\hello\\.android\\build-cache\\a3f2780340ce384e0b315c42c88c4d63b3f0b2a2\\output\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 240,
+                        "endColumn": 112,
+                        "endOffset": 348
+                    }
+                }
+            }
+        ]
+    }
+]
