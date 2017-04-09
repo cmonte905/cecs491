@@ -34,9 +34,11 @@ public class CustomList extends ArrayAdapter<String> {
       LayoutInflater inflater = context.getLayoutInflater();
       View rowView = inflater.inflate(R.layout.list_single, null, true);
       TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
+      TextView subTitle = (TextView) rowView.findViewById(R.id.subtxt);
 
       ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
       txtTitle.setText(web[position]);
+      subTitle.setText("Number " + String.valueOf(position));
       new DownloadImageTask(imageView).execute(imageURL[position]);
       //imageView.setImageResource(imageId[position]);
       return rowView;

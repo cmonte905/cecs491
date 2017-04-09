@@ -15,6 +15,7 @@ import android.app.Activity;
 public class MainActivity extends AppCompatActivity {
    ListView list;
    String[] web = {"PAWN", "ROOK", "KNIGHT", "BISHOP", "QUEEN", "KING"};
+   //String[] web = {"Android"};
    /*Integer[] imageId = {R.drawable.pawn, R.drawable.rook, R.drawable.knight,
                         R.drawable.bishop, R.drawable.queen, R.drawable.king};*/
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
       "https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/512x512/plain/chess_piece_queen.png",
       "https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/512x512/plain/chess_piece_king.png"
    };
+   //String[] imageURL = {"https://image.freepik.com/free-vector/android-boot-logo_634639.jpg"};
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
