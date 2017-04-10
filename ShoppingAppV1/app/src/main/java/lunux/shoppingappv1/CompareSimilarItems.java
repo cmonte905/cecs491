@@ -51,7 +51,13 @@ public class CompareSimilarItems extends AppCompatActivity {
 
         protected String doInBackground(Void... urls) {
             // Do some validation here
-            String walmartURL = WALMART_API_URL + searchString + WALMART_API_REPSONSE;
+            String urlString="";
+            if(searchString.split(" ").length > 1){
+                for(int i=0; i<searchString.split(" ").length;i++){
+                    urlString+=searchString.split(" ")[i]+"+";
+                }
+            }
+            String walmartURL = WALMART_API_URL + urlString + WALMART_API_REPSONSE;
             //String amazomURL = AMAZON_API_URL + searchString + AMAZOn_API_RESPONSE;
 
             try {
