@@ -34,4 +34,15 @@
         android:layout_centerHorizontal="true"
         android:text="Find Stores" />
 
+    <Button
+        android:id="@+id/compareButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/specificItem"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/findStores2"
+        android:layout_toStartOf="@+id/findStores2"
+        android:text="Compare" />
+
 </RelativeLayout>

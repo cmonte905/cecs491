@@ -25,7 +25,8 @@ public class viewItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_item);
         Intent searchResults= getIntent();
         Bundle searchResult = searchResults.getExtras();
-        String itemName = searchResult.getString("itemName");
+        final String itemName = searchResult.getString("itemName");
+        final String searchString = searchResult.getString("searchString");
         String itemURL = searchResult.getString("itemURL");
         String descriptions = searchResult.getString("description");
         TextView productName = (TextView)findViewById(R.id.specificItem);
@@ -38,6 +39,18 @@ public class viewItemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent toMap = new Intent(viewItemActivity.this, MapsActivity.class);
                 startActivity(toMap);
+            }
+        });
+        Button toCompare = (Button)findViewById(R.id.compareButton);
+        toCompare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent compareStuff = new Intent(viewItemActivity.this, CompareSimilarItems.class);
+                Bundle compareItem = new Bundle();
+                compareItem.putString("searchString" , searchString);
+                compareItem.putString("itemName" , itemName);
+                compareStuff.putExtras(compareItem);
+                startActivity(compareStuff);
             }
         });
     }

@@ -1,6 +1,5 @@
 package lunux.shoppingappv1;
 
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -8,12 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,40 +21,27 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
-
-public class SearchResultActivity extends AppCompatActivity {
+public class CompareSimilarItems extends AppCompatActivity {
     ProgressBar progressBar;
+    TextView OriginalItem;
     String searchString;
-    String storeShow;
     static final String WALMART_API_URL = "http://api.walmartlabs.com/v1/search?query=";
     static final String WALMART_API_REPSONSE = "&format=json&apiKey=bue3xb9zsg69nawfue55zxd7";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_results);
-        //Bundle received = getIntent().getBundleExtra("Bundle");
-        //responseView = (TextView) findViewById(R.id.leftResponseView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        Intent searchResults= getIntent();
-        Bundle searchResult = searchResults.getExtras();
-        searchString  = searchResult.getString("searchItem");
-        storeShow = searchResult.getString("storeName");
-        TextView searching = (TextView)findViewById(R.id.searchItem);
-        TextView storeList = (TextView)findViewById(R.id.storeString);
-        searching.setText("Searching for:"+searchString);
-        storeList.setText("Searching store(s):" + storeShow);
+        setContentView(R.layout.activity_compare_similar_items);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar2);
+        Intent received = getIntent();
+        Bundle receives = received.getExtras();
+        searchString = receives.getString("searchString");
+        OriginalItem = (TextView)findViewById(R.id.OrigItem);
+        OriginalItem.setText(receives.getString("itemName"));
         new RetrieveFeedTask().execute();
-        Button toMap = (Button)findViewById(R.id.mapButton);
-        toMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent toMap = new Intent(SearchResultActivity.this, MapsActivity.class);
-                startActivity(toMap);
-            }
-        });
     }
+
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 
         protected void onPreExecute() {
@@ -120,18 +103,19 @@ public class SearchResultActivity extends AppCompatActivity {
 
                 //Going through the items in the json array
                 ArrayList<String> itemNames = new ArrayList<String>();//Arraylist for item names
-                final ArrayList<String> nameItem = new ArrayList<String>();//Arraylist for item names
-                final ArrayList<String> itemPrices = new ArrayList<String>();//Arraylist for item prices
+                ArrayList<String> itemPrices = new ArrayList<String>();//Arraylist for item prices
                 final ArrayList<String> bigImages = new ArrayList<String>();//URL images for items
                 final ArrayList<String> itemDesc = new ArrayList<String>();//URL images for item descriptions
                 ArrayList<String> productURLs = new ArrayList<String>();
                 for (int i = 0; i < items.length(); i++) {
-                    nameItem.add(i,items.getJSONObject(i).getString("name").toString());
                     itemNames.add(i,items.getJSONObject(i).getString("name").toString());
-                    itemPrices.add(i,items.getJSONObject(i).getString("salePrice").toString());
+                    double newValue= Double.parseDouble(items.getJSONObject(i).getString("salePrice").toString());
+                    Random random= new Random();
+                    newValue = newValue + (random.nextInt(6)-3);
+                    if(newValue < 0)
+                        newValue = 0;
+                    itemPrices.add(i,Double.toString(newValue));
                     productURLs.add(i,items.getJSONObject(i).getString("thumbnailImage").toString());
-                    bigImages.add(i,items.getJSONObject(i).getString("mediumImage").toString());
-                    itemDesc.add(i,items.getJSONObject(i).getString("longDescription").toString());
                 }
                 ListView list;
                 final String[] listItem= new String[itemNames.size()];
@@ -144,20 +128,19 @@ public class SearchResultActivity extends AppCompatActivity {
                     imageLinks[i]=productURLs.get(i);
                 }
 
-                CustomList adapter = new CustomList(SearchResultActivity.this, listItem, imageLinks);
-                list = (ListView) findViewById(R.id.list);
+                CustomList adapter = new CustomList(CompareSimilarItems.this, listItem, imageLinks);
+                list = (ListView) findViewById(R.id.compareItemList);
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent viewThisItem = new Intent(SearchResultActivity.this, viewItemActivity.class);
-                        Bundle container = new Bundle();
-                        container.putString("searchString" , searchString);
-                        container.putString("itemName" , listItem[+position]);
-                        container.putString("itemURL" , bigImages.get(+position));
-                        container.putString("description", itemDesc.get(+position));
-                        viewThisItem.putExtras(container);
-                        startActivity(viewThisItem);
+                        //Intent viewThisItem = new Intent(SearchResultActivity.this, viewItemActivity.class);
+//                        Bundle container = new Bundle();
+//                        container.putString("itemName" , listItem[+position]);
+//                        container.putString("itemURL" , bigImages.get(+position));
+//                        container.putString("description", itemDesc.get(+position));
+//                        viewThisItem.putExtras(container);
+//                        startActivity(viewThisItem);
                     }
                 });
             } catch (JSONException e) {
