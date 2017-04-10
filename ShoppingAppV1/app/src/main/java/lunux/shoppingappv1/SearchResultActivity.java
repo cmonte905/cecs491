@@ -56,7 +56,7 @@ public class SearchResultActivity extends AppCompatActivity {
         toMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent toMap = new Intent(SearchResultActivity.this, MapActivity.class);
+                Intent toMap = new Intent(SearchResultActivity.this, MapsActivity.class);
                 startActivity(toMap);
             }
         });

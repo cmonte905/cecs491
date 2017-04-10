@@ -53,28 +53,8 @@
 
         <ListView
             android:id="@+id/list"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"></ListView>
-        <!--<ScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true">-->
-            <!--&lt;!&ndash;<ListView&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:id="@+id/searchResponse">&ndash;&gt;-->
-
-            <!--&lt;!&ndash;</ListView>&ndash;&gt;-->
-
-            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/leftResponseView"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:textSize="20dp"&ndash;&gt;-->
-                <!--&lt;!&ndash;/>&ndash;&gt;-->
-        <!--</ScrollView>-->
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <!--<ListView-->
         <!--android:layout_width="match_parent"-->
