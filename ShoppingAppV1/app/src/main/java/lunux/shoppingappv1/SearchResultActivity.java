@@ -74,6 +74,9 @@ public class SearchResultActivity extends AppCompatActivity {
                     urlString+=searchString.split(" ")[i]+"+";
                 }
             }
+            else{
+                urlString=searchString;
+            }
             String walmartURL = WALMART_API_URL + urlString + WALMART_API_REPSONSE;
             //String amazomURL = AMAZON_API_URL + searchString + AMAZOn_API_RESPONSE;
 
