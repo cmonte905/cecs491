@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="lunux.shoppingappv1.viewItemActivity"
+    tools:layout_editor_absoluteY="25dp"
+    tools:layout_editor_absoluteX="0dp">
+            <ImageView
+            android:id="@+id/specificImage"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_focused" />
+
+        <TextView
+            android:id="@+id/specificItem"
+            android:textSize="10pt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/specificImage"
+            android:text=" FillerText"
+            android:layout_above="@+id/findStores2" />
+
+    <Button
+        android:id="@+id/findStores2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Find Stores" />
+
+    <Button
+        android:id="@+id/compareButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/specificItem"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/findStores2"
+        android:layout_toStartOf="@+id/findStores2"
+        android:text="Compare" />
+
+</RelativeLayout>

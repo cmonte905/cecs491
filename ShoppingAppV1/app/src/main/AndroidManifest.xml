@@ -43,6 +43,8 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
+        <activity android:name=".viewItemActivity" />
+        <activity android:name=".CompareSimilarItems"></activity>
     </application>
 
 </manifest>
