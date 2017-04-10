@@ -41,18 +41,18 @@ public class viewItemActivity extends AppCompatActivity {
                 startActivity(toMap);
             }
         });
-        Button toCompare = (Button)findViewById(R.id.compareButton);
-        toCompare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent compareStuff = new Intent(viewItemActivity.this, CompareSimilarItems.class);
-                Bundle compareItem = new Bundle();
-                compareItem.putString("searchString" , searchString);
-                compareItem.putString("itemName" , itemName);
-                compareStuff.putExtras(compareItem);
-                startActivity(compareStuff);
-            }
-        });
+//        Button toCompare = (Button)findViewById(R.id.compareButton);
+//        toCompare.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent compareStuff = new Intent(viewItemActivity.this, CompareSimilarItems.class);
+//                Bundle compareItem = new Bundle();
+//                compareItem.putString("searchString" , searchString);
+//                compareItem.putString("itemName" , itemName);
+//                compareStuff.putExtras(compareItem);
+//                startActivity(compareStuff);
+//            }
+//        });
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

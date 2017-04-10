@@ -131,7 +131,7 @@ public class SearchResultActivity extends AppCompatActivity {
                     itemPrices.add(i,items.getJSONObject(i).getString("salePrice").toString());
                     productURLs.add(i,items.getJSONObject(i).getString("thumbnailImage").toString());
                     bigImages.add(i,items.getJSONObject(i).getString("mediumImage").toString());
-                    itemDesc.add(i,items.getJSONObject(i).getString("longDescription").toString());
+                    itemDesc.add(i,items.getJSONObject(i).optString("shortDescription", "longDescription").toString());
                 }
                 ListView list;
                 final String[] listItem= new String[itemNames.size()];

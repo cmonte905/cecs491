@@ -15,16 +15,29 @@
             android:layout_centerHorizontal="true"
             app:srcCompat="@drawable/common_google_signin_btn_icon_dark_focused" />
 
-        <TextView
-            android:id="@+id/specificItem"
-            android:textSize="10pt"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/specificImage"
+        android:layout_above="@+id/findStores2">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/specificImage"
-            android:text=" FillerText"
-            android:layout_above="@+id/findStores2" />
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/specificItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/findStores2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/specificImage"
+                android:text=" FillerText"
+                android:textSize="10pt" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/findStores2"
@@ -34,15 +47,14 @@
         android:layout_centerHorizontal="true"
         android:text="Find Stores" />
 
-    <Button
-        android:id="@+id/compareButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/specificItem"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/findStores2"
-        android:layout_toStartOf="@+id/findStores2"
-        android:text="Compare" />
+    <!--<Button-->
+        <!--android:id="@+id/compareButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_toLeftOf="@+id/findStores2"-->
+        <!--android:layout_toStartOf="@+id/findStores2"-->
+        <!--android:text="Compare" />-->
 
 </RelativeLayout>
