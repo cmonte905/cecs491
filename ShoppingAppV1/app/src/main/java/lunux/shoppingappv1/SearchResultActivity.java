@@ -28,9 +28,7 @@ import java.util.ArrayList;
 
 
 public class SearchResultActivity extends AppCompatActivity {
-    TextView responseView;
     ProgressBar progressBar;
-    ListView itemList;
     String searchString;
     String storeShow;
     static final String WALMART_API_URL = "http://api.walmartlabs.com/v1/search?query=";
@@ -117,23 +115,21 @@ public class SearchResultActivity extends AppCompatActivity {
                 int likelihood = object.getInt("totalResults");
                 System.out.println(likelihood + "\n\n\n\n");
 
-                JSONArray items = object.getJSONArray("items");
+                final JSONArray items = object.getJSONArray("items");
                 //JSONArray item = object.getJSONArray("Item");
 
                 //Going through the items in the json array
-                ArrayList<String> itemNames = new ArrayList<String>();
-                ArrayList<String> itemPrices = new ArrayList<String>();
-                final ArrayList<String> productURLs = new ArrayList<String>();
+                ArrayList<String> itemNames = new ArrayList<String>();//Arraylist for item names
+                ArrayList<String> itemPrices = new ArrayList<String>();//Arraylist for item prices
+                final ArrayList<String> bigImages = new ArrayList<String>();//URL images for items
+                final ArrayList<String> itemDesc = new ArrayList<String>();//URL images for item descriptions
+                ArrayList<String> productURLs = new ArrayList<String>();
                 for (int i = 0; i < items.length(); i++) {
-                    String itemName = items.getJSONObject(i).getString("name").toString() + "\n";
-                    String itemPrice = items.getJSONObject(i).getString("salePrice").toString() + "\n";
-                    String productUrl = items.getJSONObject(i).getString("productUrl").toString() + "\n\n";
                     itemNames.add(i,items.getJSONObject(i).getString("name").toString());
                     itemPrices.add(i,items.getJSONObject(i).getString("salePrice").toString());
-                    productURLs.add(i,items.getJSONObject(i).getString("productUrl").toString());
-//                    System.out.println(itemName); responseView.append(itemName);
-                    //System.out.println(itemPrice); responseView.append(itemPrice);
-//                    System.out.println(productUrl); responseView.append(productUrl);
+                    productURLs.add(i,items.getJSONObject(i).getString("thumbnailImage").toString());
+                    bigImages.add(i,items.getJSONObject(i).getString("mediumImage").toString());
+                    itemDesc.add(i,items.getJSONObject(i).getString("longDescription").toString());
                 }
                 ListView list;
                 final String[] listItem= new String[itemNames.size()];
@@ -152,29 +148,15 @@ public class SearchResultActivity extends AppCompatActivity {
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        Toast.makeText(SearchResultActivity.this, "You Clicked on the " + web[+position],
-//                                Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(SearchResultActivity.this, "You clicked on " + listItem[+position] , Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(SearchResultActivity.this, "You clicked on " + imageLinks[+position] , Toast.LENGTH_SHORT).show();
                         Intent viewThisItem = new Intent(SearchResultActivity.this, viewItemActivity.class);
                         Bundle container = new Bundle();
                         container.putString("itemName" , listItem[+position]);
-                        container.putString("itemURL" , imageLinks[+position]);
+                        container.putString("itemURL" , bigImages.get(+position));
+                        container.putString("description", itemDesc.get(+position));
                         viewThisItem.putExtras(container);
                         startActivity(viewThisItem);
                     }
                 });
-                    /*
-                    if (items.length() > 0) {
-                       for (int i = 0; i < item.length(); i++) {
-                          String title = item(i).getJSONObject("ItemAttributes").getString("Title") + "\n";
-                          System.out.println(title); responseView.append(title);
-                       }
-                    }
-                    else {
-                       System.out.println("No items matched the price."); responseView.append("No items matched the price.";
-                    }
-                    */
             } catch (JSONException e) {
                 e.printStackTrace();
             }
