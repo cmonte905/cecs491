@@ -7,11 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 public class SearchResultActivity extends AppCompatActivity {
@@ -38,7 +41,7 @@ public class SearchResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
         //Bundle received = getIntent().getBundleExtra("Bundle");
-        responseView = (TextView) findViewById(R.id.leftResponseView);
+        //responseView = (TextView) findViewById(R.id.leftResponseView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         Intent searchResults= getIntent();
         Bundle searchResult = searchResults.getExtras();
@@ -62,7 +65,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
-            responseView.setText("");
+//            responseView.setText("");
         }
 
         protected String doInBackground(Void... urls) {
@@ -118,14 +121,49 @@ public class SearchResultActivity extends AppCompatActivity {
                 //JSONArray item = object.getJSONArray("Item");
 
                 //Going through the items in the json array
+                ArrayList<String> itemNames = new ArrayList<String>();
+                ArrayList<String> itemPrices = new ArrayList<String>();
+                final ArrayList<String> productURLs = new ArrayList<String>();
                 for (int i = 0; i < items.length(); i++) {
                     String itemName = items.getJSONObject(i).getString("name").toString() + "\n";
                     String itemPrice = items.getJSONObject(i).getString("salePrice").toString() + "\n";
                     String productUrl = items.getJSONObject(i).getString("productUrl").toString() + "\n\n";
-                    System.out.println(itemName); responseView.append(itemName);
-                    System.out.println(itemPrice); responseView.append(itemPrice);
-                    System.out.println(productUrl); responseView.append(productUrl);
+                    itemNames.add(i,items.getJSONObject(i).getString("name").toString());
+                    itemPrices.add(i,items.getJSONObject(i).getString("salePrice").toString());
+                    productURLs.add(i,items.getJSONObject(i).getString("productUrl").toString());
+//                    System.out.println(itemName); responseView.append(itemName);
+                    //System.out.println(itemPrice); responseView.append(itemPrice);
+//                    System.out.println(productUrl); responseView.append(productUrl);
                 }
+                ListView list;
+                final String[] listItem= new String[itemNames.size()];
+                //String[] listPrice= new String[itemPrices.size()];
+                final String[] imageLinks= new String[productURLs.size()];
+                for(int i=0; i < itemNames.size();i++){
+                    listItem[i]=itemNames.get(i) + " \n$" + itemPrices.get(i) ;
+                }
+                for(int i=0; i < productURLs.size();i++){
+                    imageLinks[i]=productURLs.get(i);
+                }
+
+                CustomList adapter = new CustomList(SearchResultActivity.this, listItem, imageLinks);
+                list = (ListView) findViewById(R.id.list);
+                list.setAdapter(adapter);
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        Toast.makeText(SearchResultActivity.this, "You Clicked on the " + web[+position],
+//                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SearchResultActivity.this, "You clicked on " + listItem[+position] , Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SearchResultActivity.this, "You clicked on " + imageLinks[+position] , Toast.LENGTH_SHORT).show();
+                        Intent viewThisItem = new Intent(SearchResultActivity.this, viewItemActivity.class);
+                        Bundle container = new Bundle();
+                        container.putString("itemName" , listItem[+position]);
+                        container.putString("itemURL" , imageLinks[+position]);
+                        viewThisItem.putExtras(container);
+                        startActivity(viewThisItem);
+                    }
+                });
                     /*
                     if (items.length() > 0) {
                        for (int i = 0; i < item.length(); i++) {

@@ -51,27 +51,30 @@
             android:indeterminate="true"
             android:visibility="gone" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/progressBar"
-            android:layout_toEndOf="@+id/progressBar"
-            android:layout_marginBottom="14dp">
-            <!--<ListView-->
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></ListView>
+        <!--<ScrollView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent"-->
-            <!--android:id="@+id/searchResponse">-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true">-->
+            <!--&lt;!&ndash;<ListView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/searchResponse">&ndash;&gt;-->
 
-            <!--</ListView>-->
+            <!--&lt;!&ndash;</ListView>&ndash;&gt;-->
 
-            <TextView
-                android:id="@+id/leftResponseView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                />
-        </ScrollView>
+            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/leftResponseView"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textSize="20dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;/>&ndash;&gt;-->
+        <!--</ScrollView>-->
 
         <!--<ListView-->
         <!--android:layout_width="match_parent"-->
