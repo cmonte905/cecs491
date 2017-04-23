@@ -33,6 +33,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             toast.setGravity(Gravity.BOTTOM,0,0);
             toast.show();
         }
+        else if(searchString.length() > 40){
+            Context context = getApplicationContext();
+            CharSequence text = "Search item is too long!";
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.setGravity(Gravity.BOTTOM,0,0);
+            toast.show();
+            searchItem.setText("");
+        }
         else{
             Intent searchSet = new Intent(MainActivity.this, SearchResultActivity.class);
             Bundle container = new Bundle();

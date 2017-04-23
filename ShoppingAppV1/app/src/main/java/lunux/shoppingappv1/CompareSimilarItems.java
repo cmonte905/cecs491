@@ -46,22 +46,13 @@ public class CompareSimilarItems extends AppCompatActivity {
 
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
-//            responseView.setText("");
         }
 
         protected String doInBackground(Void... urls) {
             // Do some validation here
             String urlString="";
-            if(searchString.split(" ").length > 1){
-                for(int i=0; i<searchString.split(" ").length;i++){
-                    urlString+=searchString.split(" ")[i]+"+";
-                }
-            }
-            else{
-                urlString=searchString;
-            }
+            urlString=searchString.replace(" ", "+");
             String walmartURL = WALMART_API_URL + urlString + WALMART_API_REPSONSE;
-            //String amazomURL = AMAZON_API_URL + searchString + AMAZOn_API_RESPONSE;
 
             try {
                 URL url = new URL(walmartURL);
@@ -95,21 +86,12 @@ public class CompareSimilarItems extends AppCompatActivity {
             Log.i("INFO", response);
 
             try {
-                //String xml = "<Query>" + response + "</Query>";
-                //JSONObject object = XML.toJSONObject(response);
-                //object = (JSONObject) new JSONTokener(response).nextValue();
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
                 String requestID = object.getString("query");
-                //int totalProducts = object.getInt("TotalResults");
-                //System.out.println("Total results: " + totalProducts + "\n\n\n\n");
                 System.out.println(requestID + "\n\n\n\n");
-
                 int likelihood = object.getInt("totalResults");
                 System.out.println(likelihood + "\n\n\n\n");
-
                 final JSONArray items = object.getJSONArray("items");
-                //JSONArray item = object.getJSONArray("Item");
-
                 //Going through the items in the json array
                 ArrayList<String> itemNames = new ArrayList<String>();//Arraylist for item names
                 ArrayList<String> itemPrices = new ArrayList<String>();//Arraylist for item prices

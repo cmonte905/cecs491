@@ -38,8 +38,6 @@ public class SearchResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
-        //Bundle received = getIntent().getBundleExtra("Bundle");
-        //responseView = (TextView) findViewById(R.id.leftResponseView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         Intent searchResults= getIntent();
         Bundle searchResult = searchResults.getExtras();
@@ -69,20 +67,11 @@ public class SearchResultActivity extends AppCompatActivity {
         protected String doInBackground(Void... urls) {
             // Do some validation here
             String urlString="";
-            if(searchString.split(" ").length > 1){
-                for(int i=0; i<searchString.split(" ").length;i++){
-                    urlString+=searchString.split(" ")[i]+"+";
-                }
-            }
-            else{
-                urlString=searchString;
-            }
+            urlString=searchString.replace(" ", "+");
             String walmartURL = WALMART_API_URL + urlString + WALMART_API_REPSONSE;
-            //String amazomURL = AMAZON_API_URL + searchString + AMAZOn_API_RESPONSE;
 
             try {
                 URL url = new URL(walmartURL);
-                //URL url = new URL(amazonURL);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -112,13 +101,8 @@ public class SearchResultActivity extends AppCompatActivity {
             Log.i("INFO", response);
 
             try {
-                //String xml = "<Query>" + response + "</Query>";
-                //JSONObject object = XML.toJSONObject(response);
-                //object = (JSONObject) new JSONTokener(response).nextValue();
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
                 String requestID = object.getString("query");
-                //int totalProducts = object.getInt("TotalResults");
-                //System.out.println("Total results: " + totalProducts + "\n\n\n\n");
                 System.out.println(requestID + "\n\n\n\n");
 
                 int likelihood = object.getInt("totalResults");
@@ -144,7 +128,7 @@ public class SearchResultActivity extends AppCompatActivity {
                 }
                 ListView list;
                 final String[] listItem= new String[itemNames.size()];
-                //String[] listPrice= new String[itemPrices.size()];
+
                 final String[] imageLinks= new String[productURLs.size()];
                 for(int i=0; i < itemNames.size();i++){
                     listItem[i]=itemNames.get(i) + " \n$" + itemPrices.get(i) ;
