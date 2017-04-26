@@ -1,28 +1,40 @@
 package lunux.shoppingappv1;
 
 import android.Manifest;
-        import android.content.pm.PackageManager;
-        import android.location.Location;
-        import android.os.Build;
-        import android.support.v4.app.ActivityCompat;
-        import android.support.v4.app.FragmentActivity;
-        import android.os.Bundle;
-        import android.support.v4.content.ContextCompat;
-        import android.widget.Toast;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.widget.Toast;
 
-        import com.google.android.gms.common.ConnectionResult;
-        import com.google.android.gms.common.api.GoogleApiClient;
-        import com.google.android.gms.location.LocationListener;
-        import com.google.android.gms.location.LocationRequest;
-        import com.google.android.gms.location.LocationServices;
-        import com.google.android.gms.maps.CameraUpdateFactory;
-        import com.google.android.gms.maps.GoogleMap;
-        import com.google.android.gms.maps.OnMapReadyCallback;
-        import com.google.android.gms.maps.SupportMapFragment;
-        import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-        import com.google.android.gms.maps.model.LatLng;
-        import com.google.android.gms.maps.model.Marker;
-        import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -34,6 +46,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+
+    // zip code, which ever works
+    private String mapURL = "http://api.walmartlabs.com/v1/stores?format=json";
+    private String apiKeyWalmart = "&apiKey=bue3xb9zsg69nawfue55zxd7";
+    //Test values
+    private String mapLat = "&lat=";
+    private String mapLon = "&lon=";
+
+    public static ArrayList<Double> mapLatList;
+    public static ArrayList<Double> mapLonList;
+
+    String lat;
+    String lon;
+
+    // To store walmart location
+    private LatLng WAL_MART = new LatLng(33.783768, -118.114336);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +91,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        // Add a marker for the walmart location
+        mMap.addMarker(new MarkerOptions().position(WAL_MART).title("Find me here!"));
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -115,6 +146,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
+
+        lat = String.valueOf(location.getLatitude());
+        lon = String.valueOf(location.getLongitude());
 
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -203,6 +237,72 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             // other 'case' lines to check for other permissions this app might request.
             // You can add here other case statements according to your requirement.
+        }
+    }
+
+    class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+
+        protected String doInBackground(Void... urls) {
+            // Do some validation here
+            mapLat += lat;
+            mapLon += lon;
+            String walmartMapURL = mapURL + mapLat + mapLon + apiKeyWalmart;
+
+            try {
+                URL url = new URL(walmartMapURL);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    bufferedReader.close();
+                    return stringBuilder.toString();
+                }
+                finally {
+                    urlConnection.disconnect();
+                }
+            }
+            catch(Exception e) {
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String response) {
+            if(response == null) {
+                response = "THERE WAS AN ERROR";
+            }
+
+            try {
+                // Create json array of the data, that is how the response is formatted
+                JSONArray object =  new JSONArray (response);
+                //Going through the items in the json array
+                mapLatList = new ArrayList<Double>(); //Arraylist for item names
+                mapLonList = new ArrayList<Double>(); //Arraylist for item prices\
+
+                for (int i = 0; i < object.length(); i++) {
+                    JSONObject temp = object.getJSONObject(i);
+                    //System.out.println(temp.getString("name").toString());
+                    JSONArray tempArray = temp.getJSONArray("coordinates");
+                    //System.out.println(tempArray.toString());
+
+                    String[] coordArray = tempArray.toString().replaceAll("[\\(\\)\\[\\]\\{\\}]","").split(",");
+                    mapLatList.add(Double.parseDouble(coordArray[1]));
+                    mapLonList.add(Double.parseDouble(coordArray[0]));
+                }
+                for(Double coords : mapLatList){
+                    System.out.println(coords);
+                }
+                for(Double coords : mapLonList){
+                    System.out.println(coords);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ShoppingApp</string>
     <string name="title_activity_maps">Map</string>
+        <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyBfQHmcRBmTz9zRTze1N5ba7_XxGJ5_Nd4
+    </string>
 </resources>
