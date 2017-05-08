@@ -61,12 +61,11 @@ public class SearchResultActivity extends AppCompatActivity {
 
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
-//            responseView.setText("");
         }
 
         protected String doInBackground(Void... urls) {
             // Do some validation here
-            String urlString="";
+            String urlString;
             urlString=searchString.replace(" ", "+");
             String walmartURL = WALMART_API_URL + urlString + WALMART_API_REPSONSE;
 
@@ -109,35 +108,33 @@ public class SearchResultActivity extends AppCompatActivity {
                 System.out.println(likelihood + "\n\n\n\n");
 
                 final JSONArray items = object.getJSONArray("items");
-                //JSONArray item = object.getJSONArray("Item");
 
                 //Going through the items in the json array
-                ArrayList<String> itemNames = new ArrayList<String>();//Arraylist for item names
                 final ArrayList<String> nameItem = new ArrayList<String>();//Arraylist for item names
                 final ArrayList<String> itemPrices = new ArrayList<String>();//Arraylist for item prices
-                final ArrayList<String> bigImages = new ArrayList<String>();//URL images for items
+                final ArrayList<String> bigImages = new ArrayList<String>();//URL images for larger picture of item
                 final ArrayList<String> itemDesc = new ArrayList<String>();//URL images for item descriptions
-                ArrayList<String> productURLs = new ArrayList<String>();
-                for (int i = 0; i < items.length(); i++) {
+                ArrayList<String> productURLs = new ArrayList<String>();//URL images for thumbnails
+                for (int i = 0; i < items.length(); i++) {//Stores each item to the arraylist
                     nameItem.add(i,items.getJSONObject(i).getString("name").toString());
-                    itemNames.add(i,items.getJSONObject(i).getString("name").toString());
                     itemPrices.add(i,items.getJSONObject(i).getString("salePrice").toString());
                     productURLs.add(i,items.getJSONObject(i).getString("thumbnailImage").toString());
                     bigImages.add(i,items.getJSONObject(i).getString("mediumImage").toString());
                     itemDesc.add(i,items.getJSONObject(i).optString("shortDescription", "longDescription").toString());
                 }
                 ListView list;
-                final String[] listItem= new String[itemNames.size()];
+                //Creates an array for listview adapter.
+                final String[] imageLinkList= new String[productURLs.size()];
+                final String[] itemPriceList= new String[productURLs.size()];
+                final String[] itemNameList= new String[productURLs.size()];
 
-                final String[] imageLinks= new String[productURLs.size()];
-                for(int i=0; i < itemNames.size();i++){
-                    listItem[i]=itemNames.get(i) + " \n$" + itemPrices.get(i) ;
-                }
-                for(int i=0; i < productURLs.size();i++){
-                    imageLinks[i]=productURLs.get(i);
+                for(int i=0; i < productURLs.size();i++){//Convert the arraylist to an array
+                    imageLinkList[i] = productURLs.get(i);
+                    itemPriceList[i] = itemPrices.get(i);
+                    itemNameList[i] = nameItem.get(i);
                 }
 
-                CustomList adapter = new CustomList(SearchResultActivity.this, listItem, imageLinks);
+                CustomList adapter = new CustomList(SearchResultActivity.this, itemNameList, itemPriceList, imageLinkList);//Creates listview of the objects
                 list = (ListView) findViewById(R.id.list);
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -146,7 +143,7 @@ public class SearchResultActivity extends AppCompatActivity {
                         Intent viewThisItem = new Intent(SearchResultActivity.this, viewItemActivity.class);
                         Bundle container = new Bundle();
                         container.putString("searchString" , searchString);
-                        container.putString("itemName" , listItem[+position]);
+                        container.putString("itemName" , nameItem.get(+position) +"\n$" +itemPrices.get(+position));
                         container.putString("itemURL" , bigImages.get(+position));
                         container.putString("description", itemDesc.get(+position));
                         viewThisItem.putExtras(container);

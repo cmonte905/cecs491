@@ -50,13 +50,12 @@ public class CompareSimilarItems extends AppCompatActivity {
 
         protected String doInBackground(Void... urls) {
             // Do some validation here
-            String urlString="";
+            String urlString;
             urlString=searchString.replace(" ", "+");
             String walmartURL = WALMART_API_URL + urlString + WALMART_API_REPSONSE;
 
             try {
                 URL url = new URL(walmartURL);
-                //URL url = new URL(amazonURL);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -89,49 +88,59 @@ public class CompareSimilarItems extends AppCompatActivity {
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
                 String requestID = object.getString("query");
                 System.out.println(requestID + "\n\n\n\n");
+
                 int likelihood = object.getInt("totalResults");
                 System.out.println(likelihood + "\n\n\n\n");
+
                 final JSONArray items = object.getJSONArray("items");
+
                 //Going through the items in the json array
-                ArrayList<String> itemNames = new ArrayList<String>();//Arraylist for item names
-                ArrayList<String> itemPrices = new ArrayList<String>();//Arraylist for item prices
-                final ArrayList<String> bigImages = new ArrayList<String>();//URL images for items
+                final ArrayList<String> nameItem = new ArrayList<String>();//Arraylist for item names
+                final ArrayList<String> itemPrices = new ArrayList<String>();//Arraylist for item prices
+                final ArrayList<String> bigImages = new ArrayList<String>();//URL images for larger picture of item
                 final ArrayList<String> itemDesc = new ArrayList<String>();//URL images for item descriptions
-                ArrayList<String> productURLs = new ArrayList<String>();
+                ArrayList<String> productURLs = new ArrayList<String>();//URL images for thumbnails
                 for (int i = 0; i < items.length(); i++) {
-                    itemNames.add(i,items.getJSONObject(i).getString("name").toString());
-                    double newValue= Double.parseDouble(items.getJSONObject(i).getString("salePrice").toString());
-                    Random random= new Random();
-                    newValue = newValue + (random.nextInt(6)-3);
-                    if(newValue < 0)
-                        newValue = 0;
-                    itemPrices.add(i,Double.toString(newValue));
+                    nameItem.add(i,items.getJSONObject(i).getString("name").toString());
+                    itemPrices.add(i,items.getJSONObject(i).getString("salePrice").toString());
                     productURLs.add(i,items.getJSONObject(i).getString("thumbnailImage").toString());
+                    bigImages.add(i,items.getJSONObject(i).getString("mediumImage").toString());
+                    itemDesc.add(i,items.getJSONObject(i).optString("shortDescription", "longDescription").toString());
                 }
                 ListView list;
-                final String[] listItem= new String[itemNames.size()];
-                //String[] listPrice= new String[itemPrices.size()];
-                final String[] imageLinks= new String[productURLs.size()];
-                for(int i=0; i < itemNames.size();i++){
-                    listItem[i]=itemNames.get(i) + " \n$" + itemPrices.get(i) ;
-                }
-                for(int i=0; i < productURLs.size();i++){
-                    imageLinks[i]=productURLs.get(i);
-                }
+                //final String[] listItem= new String[itemNames.size()];
 
-                CustomList adapter = new CustomList(CompareSimilarItems.this, listItem, imageLinks);
+                final String[] imageLinkList= new String[productURLs.size()];
+                final String[] itemPriceList= new String[productURLs.size()];
+                final String[] itemNameList= new String[productURLs.size()];
+
+                for(int i=0; i < productURLs.size();i++){//Convert the arraylist to an array
+                    imageLinkList[i] = productURLs.get(i);
+                    itemPriceList[i] = itemPrices.get(i);
+                    itemNameList[i] = nameItem.get(i);
+                }
+                Random r = new Random(1);
+                for(int i =0 ; i < itemPriceList.length; i++){
+                    double a  = Double.parseDouble(itemPriceList[i]);
+                    Random random = new Random();
+                    double value = .7 + (1.5 - .7) * random.nextDouble();
+                    a*= value;
+                    itemPriceList[i]=""+a;
+                }
+                CustomList adapter = new CustomList(CompareSimilarItems.this, itemNameList, itemPriceList, imageLinkList);
                 list = (ListView) findViewById(R.id.compareItemList);
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //Intent viewThisItem = new Intent(SearchResultActivity.this, viewItemActivity.class);
-//                        Bundle container = new Bundle();
-//                        container.putString("itemName" , listItem[+position]);
-//                        container.putString("itemURL" , bigImages.get(+position));
-//                        container.putString("description", itemDesc.get(+position));
-//                        viewThisItem.putExtras(container);
-//                        startActivity(viewThisItem);
+                        Intent viewThisItem = new Intent(CompareSimilarItems.this, viewItemActivity.class);
+                        Bundle container = new Bundle();
+                        container.putString("searchString" , searchString);
+                        container.putString("itemName" , nameItem.get(+position) +"\n$" +itemPrices.get(+position));
+                        container.putString("itemURL" , bigImages.get(+position));
+                        container.putString("description", itemDesc.get(+position));
+                        viewThisItem.putExtras(container);
+                        startActivity(viewThisItem);
                     }
                 });
             } catch (JSONException e) {

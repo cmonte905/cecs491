@@ -3,6 +3,7 @@ package lunux.shoppingappv1;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +17,17 @@ import java.net.URL;
 public class CustomList extends ArrayAdapter<String> {
     private final Activity context;
     private final String[] web;
+    private final String[] price;
     //private final Integer[] imageId;
     private final String[] imageURL;
 
-    public CustomList(Activity context, String[] web, String[] imageURL) {
+    public CustomList(Activity context, String[] web, String[] prices ,String[] imageURL) {
         //public CustomList(Activity context, String[] web, Integer[] imageId) {
         super(context, R.layout.list_single, web);
         this.context = context;
         this.web = web;
-        //this.imageId = imageId;
+        this.price=prices;
+
         this.imageURL = imageURL;
     }
 
@@ -34,10 +37,12 @@ public class CustomList extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.list_single, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
         TextView subTitle = (TextView) rowView.findViewById(R.id.subtxt);
-
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
         txtTitle.setText(web[position]);
-        subTitle.setText("Number " + String.valueOf(position));
+
+        String converter = String.format("%.2f", Double.parseDouble(price[position]));
+        String formatPrice = "$"+ converter;
+        subTitle.setText(formatPrice);
         new DownloadImageTask(imageView).execute(imageURL[position]);
         //imageView.setImageResource(imageId[position]);
         return rowView;
